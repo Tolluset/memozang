@@ -32,6 +32,7 @@ export default function MemoInput() {
 
     memoInput.setAttribute("contenteditable", "true");
     memoInput.setAttribute("autofocus", "true");
+    memoInput.focus();
 
     memoInput.innerText = memo;
 
