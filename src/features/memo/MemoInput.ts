@@ -1,6 +1,11 @@
 import classes from "./MemoInput.module.css";
 
 export default function MemoInput() {
+  let memo = "";
+  const setMemo = (value: string) => {
+    memo = value;
+  };
+
   function view() {
     const element = document.createElement("div");
     element.classList.add(classes.wrapper);
@@ -13,24 +18,34 @@ export default function MemoInput() {
   }
 
   function setup(element: HTMLElement) {
-    let memo = "";
-
-    const setMemo = (value: string, element: HTMLDivElement) => {
-      memo = value;
-      element.innerText = memo;
+    const saveMemo = (memo: string) => {
+      localStorage.setItem("memozang-memo", memo);
     };
 
-    const memoInput = element.children[0] as HTMLDivElement;
-    memoInput.setAttribute("autofocus", "true");
-    memoInput.setAttribute("contenteditable", "true");
+    const loadMemo = () => {
+      return localStorage.getItem("memozang-memo");
+    };
 
-    memoInput.addEventListener("change", () => {
-      setMemo(memoInput.innerText, memoInput);
+    memo = loadMemo() ?? "";
+
+    const memoInput = element.children[0] as HTMLDivElement;
+
+    memoInput.setAttribute("contenteditable", "true");
+    memoInput.setAttribute("autofocus", "true");
+
+    memoInput.innerText = memo;
+
+    memoInput.addEventListener("keyup", () => {
+      setMemo(memoInput.innerText);
+      saveMemo(memo);
     });
-    setMemo("", memoInput);
 
     return element;
   }
 
-  return setup(view());
+  function render() {
+    return setup(view());
+  }
+
+  return render();
 }
