@@ -1,29 +1,18 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-
-// @TODO move to constants
-type key = "memozang-memo";
-
-// @TODO move to utils
-const localStorageManager = (key: key) => {
-  return {
-    get: () => localStorage.getItem(key),
-    set: (value: string) => localStorage.setItem(key, value),
-  };
-};
-
-const memoStorage = localStorageManager("memozang-memo");
-
-const saveMemo = (memo: string) => {
-  memoStorage.set(memo);
-};
-
-const loadMemo = () => {
-  return memoStorage.get() ?? "";
-};
+import { LocalStorage } from "~/utils/localStorageManager";
 
 export default function MemoInput() {
+  const saveMemo = (memo: string) => {
+    LocalStorage.setItem("memozang-memo", memo);
+  };
+
+  const loadMemo = () => {
+    return LocalStorage.getItem("memozang-memo") ?? "";
+  };
+
+  const [mounted, setMounted] = useState(false);
   const [memo, setMemo] = useState<string>(loadMemo);
   const editableRef = useRef<HTMLDivElement>(null);
 
@@ -46,6 +35,8 @@ export default function MemoInput() {
     if (editableRef.current) {
       focusContentEditableTextToEnd(editableRef.current);
     }
+
+    setMounted(true);
   }, []);
 
   return (
@@ -53,9 +44,10 @@ export default function MemoInput() {
       <div
         contentEditable
         suppressContentEditableWarning
-        autoFocus
         onKeyUp={onKeyUpMemoInput}
-        dangerouslySetInnerHTML={{ __html: trimming(memo ?? "") }}
+        dangerouslySetInnerHTML={{
+          __html: mounted ? trimming(memo ?? "") : "",
+        }}
         ref={editableRef}
         className="outline-none break-all text-size text-white text-[1.8rem] md:text-[2rem] height-[calc(100% - 3rem)] px-7 py-8  md:px-24 md:py-20"
       />
