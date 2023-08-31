@@ -21,23 +21,15 @@ export default function MemoInput() {
     saveMemo(memoInput.innerText);
   };
 
-  const trimming = (text: string) => {
-    return text
-      .split("\n")
-      .map((line) => {
-        console.log(line);
-        return line.trim() === "" ? "" : line;
-      })
-      .join("<br>");
-  };
-
   useEffect(() => {
-    if (editableRef.current) {
-      focusContentEditableTextToEnd(editableRef.current);
-    }
-
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (editableRef.current && mounted === true) {
+      focusContentEditableTextToEnd(editableRef.current);
+    }
+  }, [mounted]);
 
   return (
     <div className="grid">
@@ -68,4 +60,13 @@ const focusContentEditableTextToEnd = (element: HTMLElement) => {
   newRange.collapse(false);
   selection?.removeAllRanges();
   selection?.addRange(newRange);
+};
+
+const trimming = (text: string) => {
+  return text
+    .split("\n")
+    .map((line) => {
+      return line.trim() === "" ? "" : line;
+    })
+    .join("<br>");
 };
