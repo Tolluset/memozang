@@ -1,7 +1,5 @@
 # Memozang
 
-Just simple board for memo.
+Just a simple board for memos.
 
-The page memo is saved on local storage.
-
-[https://tolluset.github.io/memozang/](https://tolluset.github.io/memozang/)
+The page saves memos just on the local storage.
