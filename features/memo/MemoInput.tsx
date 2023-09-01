@@ -13,12 +13,13 @@ export default function MemoInput() {
   };
 
   const [mounted, setMounted] = useState(false);
-  const [memo, setMemo] = useState<string>(loadMemo);
+  const [memo, _] = useState(loadMemo);
+
   const editableRef = useRef<HTMLDivElement>(null);
 
   const onKeyUpMemoInput = (event: React.KeyboardEvent<HTMLDivElement>) => {
     const memoInput = event.target as HTMLDivElement;
-    saveMemo(memoInput.innerText);
+    saveMemo(memoInput.innerText.replace(/\n\n/gm, "\n"));
   };
 
   useEffect(() => {
@@ -37,12 +38,11 @@ export default function MemoInput() {
         contentEditable
         suppressContentEditableWarning
         onKeyUp={onKeyUpMemoInput}
-        dangerouslySetInnerHTML={{
-          __html: mounted ? trimming(memo ?? "") : "",
-        }}
         ref={editableRef}
-        className="outline-none break-all text-size text-white text-[1.8rem] md:text-[2rem] height-[calc(100% - 3rem)] px-7 py-8  md:px-24 md:py-20"
-      />
+        className="inline-block outline-none break-all text-size text-white text-[1.8rem] md:text-[2rem] height-[calc(100% - 3rem)] px-7 py-8  md:px-24 md:py-20"
+      >
+        {mounted && bakeTags(memo)}
+      </div>
     </div>
   );
 }
@@ -50,7 +50,6 @@ export default function MemoInput() {
 const focusContentEditableTextToEnd = (element: HTMLElement) => {
   if (element.innerText.length === 0) {
     element.focus();
-
     return;
   }
 
@@ -62,11 +61,16 @@ const focusContentEditableTextToEnd = (element: HTMLElement) => {
   selection?.addRange(newRange);
 };
 
-const trimming = (text: string) => {
-  return text
-    .split("\n")
-    .map((line) => {
-      return line.trim() === "" ? "" : line;
-    })
-    .join("<br>");
+const bakeTags = (memo: string) => {
+  const memos = memo.split("\n");
+  const memoLength = memos.length;
+
+  return memos.map((m, i) => {
+    return (
+      <div key={i}>
+        {m}
+        {memoLength - 1 !== i && <br />}
+      </div>
+    );
+  });
 };
