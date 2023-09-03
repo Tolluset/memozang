@@ -7,11 +7,12 @@ INSERT INTO auth.identities (id, user_id, "provider", identity_data, created_at,
 	('662adb80-2949-46fc-8cad-a3cb156ede6e', '662adb80-2949-46fc-8cad-a3cb156ede6e', 'email', '{"sub":"662adb80-2949-46fc-8cad-a3cb156ede6e","email":"test@example.com"}', '2023-02-25T10:06:34.441Z', '2023-02-25T10:06:34.441Z', '2023-02-25T10:06:34.441Z');
 
 insert into
-  memos (title, content, user_id)
+  memos (title, content, selected, user_id)
 values
   (
     'Meeting Notes',
     'Discussed project updates and next steps.',
+    true,
     'd9c444f1-4e91-4abb-b4c7-1d18318990e9'
   ),
   (
@@ -19,5 +20,6 @@ values
     '1. Finish report
 2. Send email to team
 3. Schedule meeting',
+    true,
     '662adb80-2949-46fc-8cad-a3cb156ede6e'
   );

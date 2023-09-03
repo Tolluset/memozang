@@ -2,10 +2,11 @@ create table
   memos (
     id bigint primary key generated always as identity,
     title text,
-    content text not null,
+    content text,
+    selected boolean default false,
     created_at timestamp with time zone default current_timestamp,
     updated_at timestamp with time zone,
-    user_id uuid references auth.users not null
+    user_id uuid references auth.users not null default auth.uid()
   );
 
 alter table memos enable row level security;

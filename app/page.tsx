@@ -15,7 +15,6 @@ export type Memo = {
 
 export default async function Page() {
   const supabase = createServerComponentClient<Database>({ cookies });
-  const { data: memos } = await supabase.from("memos").select();
 
   const {
     data: { session },
@@ -25,15 +24,31 @@ export default async function Page() {
     redirect("/login");
   }
 
-  if (!memos) {
-    return "no data...";
-  }
+  const { data: selectedMemo } = await supabase
+    .from("memos")
+    .select()
+    .match({ "user_id ": session.user.id, selected: true })
+    .limit(1)
+    .single();
 
-  const selected_memo = 0;
+  async function makeNewMemo() {
+    const { data: newMemo } = await supabase
+      .from("memos")
+      .insert({ selected: true, content: "" })
+      .select()
+      .limit(1)
+      .single();
+
+    if (!newMemo) {
+      throw new Error("Failed to create new memo");
+    }
+
+    return newMemo;
+  }
 
   return (
     <main>
-      <Memo memo={memos[selected_memo]} />
+      <Memo memo={selectedMemo ? selectedMemo : await makeNewMemo()} />
     </main>
   );
 }
