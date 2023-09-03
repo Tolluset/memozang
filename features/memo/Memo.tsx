@@ -7,6 +7,7 @@ import { useDebounce } from "~/hooks/useDebounce";
 
 export default function MemoInput({ memo }: { memo: Tables<"memos"> }) {
   const [mounted, setMounted] = useState(false);
+  const [updatedAt, setUpdatedAt] = useState(memo.updated_at);
 
   const editableRef = useRef<HTMLDivElement>(null);
 
@@ -21,6 +22,8 @@ export default function MemoInput({ memo }: { memo: Tables<"memos"> }) {
         .from("memos")
         .update({ content: parsedMemo, updated_at: new Date().toISOString() })
         .eq("id", memo.id);
+
+      setUpdatedAt(new Date().toLocaleString("en-US"));
     },
     1000
   );
@@ -36,11 +39,11 @@ export default function MemoInput({ memo }: { memo: Tables<"memos"> }) {
   }, [mounted]);
 
   const memoCreatedAt = memo.created_at
-    ? new Date(memo?.created_at).toLocaleString()
+    ? new Date(memo?.created_at).toLocaleString("en-US")
     : "unknown";
 
-  const memoUpdatedAt = memo.updated_at
-    ? new Date(memo?.updated_at).toLocaleString()
+  const memoUpdatedAt = updatedAt
+    ? new Date(updatedAt).toLocaleString("en-US")
     : "unknown";
 
   return (

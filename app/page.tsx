@@ -24,12 +24,12 @@ export default async function Page() {
     redirect("/login");
   }
 
-  const { data: selectedMemo } = await supabase
+  const { data: memos } = await supabase
     .from("memos")
     .select()
-    .match({ "user_id ": session.user.id, selected: true })
-    .limit(1)
-    .single();
+    .match({ "user_id ": session.user.id });
+
+  const selectedMemo = memos?.find((memo) => memo.selected);
 
   async function makeNewMemo() {
     const { data: newMemo } = await supabase
