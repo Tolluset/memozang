@@ -7,7 +7,6 @@ import { useDebounce } from "~/hooks/useDebounce";
 
 export default function MemoInput({ memo }: { memo: Tables<"memos"> }) {
   const [mounted, setMounted] = useState(false);
-  const [typedMemo, setTypedMemo] = useState("");
 
   const editableRef = useRef<HTMLDivElement>(null);
 
@@ -16,10 +15,11 @@ export default function MemoInput({ memo }: { memo: Tables<"memos"> }) {
   const onKeyUpMemoInput = useDebounce(
     async (event: React.KeyboardEvent<HTMLDivElement>) => {
       const memoInput = event.target as HTMLDivElement;
-      setTypedMemo(memoInput.innerText.replace(/\n\n/gm, "\n"));
+      const parsedMemo = memoInput.innerText.replace(/\n\n/gm, "\n");
+
       await supabase
         .from("memos")
-        .update({ content: typedMemo })
+        .update({ content: parsedMemo, updated_at: new Date().toISOString() })
         .eq("id", memo.id);
     },
     1000
@@ -35,8 +35,20 @@ export default function MemoInput({ memo }: { memo: Tables<"memos"> }) {
     }
   }, [mounted]);
 
+  const memoCreatedAt = memo.created_at
+    ? new Date(memo?.created_at).toLocaleString()
+    : "unknown";
+
+  const memoUpdatedAt = memo.updated_at
+    ? new Date(memo?.updated_at).toLocaleString()
+    : "unknown";
+
   return (
     <div className="grid">
+      <div className="grid justify-end">
+        <div>created: {memoCreatedAt}</div>
+        <div>updated: {memoUpdatedAt}</div>
+      </div>
       <div
         contentEditable
         suppressContentEditableWarning
