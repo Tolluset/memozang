@@ -2,8 +2,7 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import MemoInput from "~/features/memo/MemoInput";
-import MemoInputFromServer from "~/features/memo/MemoInputFromServer";
+import Memo from "~/features/memo/Memo";
 import { Database } from "~/models/database.types";
 
 export type Memo = {
@@ -34,7 +33,7 @@ export default async function Page() {
 
   return (
     <main>
-      <MemoInputFromServer memo={memos[selected_memo]} />
+      <Memo memo={memos[selected_memo]} />
     </main>
   );
 }
