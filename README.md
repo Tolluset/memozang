@@ -6,4 +6,4 @@ Just a simple page for writing memos.
 
 - `pnpm install`
 - `pnpm dev`
-- `supbase start` (this setup using docker)
+- `supabase start` (this setup using docker)
