@@ -50,7 +50,6 @@ export default function MemoInput({ memo }: { memo: Tables<"memos"> }) {
   return (
     <div className="grid">
       <LogoutButton />
-      <LogoutButton />
       <div className="grid justify-end">
         <div>created: {memoCreatedAt}</div>
         <div>updated: {memoUpdatedAt}</div>
