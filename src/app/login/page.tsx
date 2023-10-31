@@ -31,11 +31,21 @@ function Inputs() {
       <label htmlFor="email" className="text-xl">
         Email
       </label>
-      <input name="email" className="text-black h-10" />
+      <input
+        type="email"
+        name="email"
+        autoComplete="email"
+        className="text-black h-10"
+      />
       <label htmlFor="password" className="text-xl">
         Password
       </label>
-      <input type="password" name="password" className="text-black h-10" />
+      <input
+        type="password"
+        name="password"
+        autoComplete="current-password"
+        className="text-black h-10"
+      />
     </div>
   );
 }
