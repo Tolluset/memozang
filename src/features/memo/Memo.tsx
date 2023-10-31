@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Database, Tables } from "~/models/database.types";
 import { useDebounce } from "~/hooks/useDebounce";
+import LogoutButton from "../auth/LogoutButton";
 
 export default function MemoInput({ memo }: { memo: Tables<"memos"> }) {
   const [mounted, setMounted] = useState(false);
@@ -25,7 +26,7 @@ export default function MemoInput({ memo }: { memo: Tables<"memos"> }) {
 
       setUpdatedAt(new Date().toLocaleString("en-US"));
     },
-    1000
+    1000,
   );
 
   useEffect(() => {
@@ -48,6 +49,8 @@ export default function MemoInput({ memo }: { memo: Tables<"memos"> }) {
 
   return (
     <div className="grid">
+      <LogoutButton />
+      <LogoutButton />
       <div className="grid justify-end">
         <div>created: {memoCreatedAt}</div>
         <div>updated: {memoUpdatedAt}</div>
