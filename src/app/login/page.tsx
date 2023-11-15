@@ -16,7 +16,7 @@ export default async function Page() {
   }
 
   return (
-    <div className="grid items-center justify-center px-6 h-screen grid-cols-[minmax(0,_512px)]">
+    <div className="grid h-screen grid-cols-[minmax(0,_512px)] items-center justify-center px-6">
       <form action="/auth/login" method="post">
         <Inputs />
         <Buttons />
@@ -27,34 +27,41 @@ export default async function Page() {
 
 function Inputs() {
   return (
-    <div className="grid">
-      <label htmlFor="email" className="text-xl">
-        Email
-      </label>
-      <input
-        type="email"
-        name="email"
-        autoComplete="email"
-        className="text-black h-10"
-      />
-      <label htmlFor="password" className="text-xl">
-        Password
-      </label>
-      <input
-        type="password"
-        name="password"
-        autoComplete="current-password"
-        className="text-black h-10"
-      />
+    <div className="grid gap-y-4">
+      <div className="grid gap-y-2">
+        <label htmlFor="email" className="text-2xl">
+          Email
+        </label>
+        <input
+          type="email"
+          name="email"
+          autoComplete="email"
+          className="h-10 rounded-lg bg-gray-500 px-3 text-2xl text-white"
+        />
+      </div>
+      <div className="grid gap-y-2">
+        <label htmlFor="password" className="text-2xl">
+          Password
+        </label>
+        <input
+          type="password"
+          name="password"
+          autoComplete="current-password"
+          className="h-10 rounded-lg bg-gray-500 px-3 text-2xl text-white"
+        />
+      </div>
     </div>
   );
 }
 
 function Buttons() {
   return (
-    <div className="grid gap-8 pt-16 w-full">
+    <div className="grid w-full gap-8 pt-14">
       <Button className="w-full">Sign In</Button>
-      <Button variant="secondary" formAction="/auth/sign-up" className="w-full">
+      <Button
+        formAction="/auth/sign-up"
+        className="w-40 justify-self-center bg-transparent text-base"
+      >
         Sign Up
       </Button>
     </div>
