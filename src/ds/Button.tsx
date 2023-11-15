@@ -1,6 +1,14 @@
 import React from "react";
+import { twMerge } from "tailwind-merge";
 
-type Variant = "primary" | "secondary";
+type ButtonVariant = "primary" | "secondary";
+
+const DEFAULT_STYLE = "w-fit rounded-2xl p-3 text-[1.8rem] font-bold";
+
+const BUTTON_VARIANTS = {
+  primary: `bg-primary ${DEFAULT_STYLE}`,
+  secondary: `bg-secondary ${DEFAULT_STYLE} `,
+};
 
 export default function Button({
   variant = "primary",
@@ -8,17 +16,14 @@ export default function Button({
   className,
   ...rest
 }: {
-  variant?: Variant;
+  variant?: ButtonVariant;
   children: React.ReactNode;
   className?: string;
 } & React.ComponentPropsWithoutRef<"button">) {
-  const bgColor = variant === "primary" ? "bg-primary" : "bg-secondary";
+  const varaints = BUTTON_VARIANTS[variant];
 
   return (
-    <button
-      className={`${bgColor} w-fit font-bold text-[1.8rem] p-3 rounded-2xl ${className}`}
-      {...rest}
-    >
+    <button className={twMerge(varaints, className)} {...rest}>
       {children}
     </button>
   );
