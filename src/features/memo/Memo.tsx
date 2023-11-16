@@ -2,24 +2,27 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { Database, Tables } from "~/models/database.types";
+import { DB, DBClient, Memo } from "~/models/database.types";
 import { useDebounce } from "~/hooks/useDebounce";
 import LogoutButton from "../auth/LogoutButton";
+import Button from "~/ds/Button";
+import { useRouter } from "next/navigation";
 
-export default function MemoInput({ memo }: { memo: Tables<"memos"> }) {
+export default function MemoInput({ memo }: { memo: Memo }) {
   const [mounted, setMounted] = useState(false);
   const [updatedAt, setUpdatedAt] = useState(memo.updated_at);
 
   const editableRef = useRef<HTMLDivElement>(null);
 
-  const supabase = createClientComponentClient<Database>();
+  const router = useRouter();
+  const db = createClientComponentClient<DB>();
 
   const onKeyUpMemoInput = useDebounce(
     async (event: React.KeyboardEvent<HTMLDivElement>) => {
       const memoInput = event.target as HTMLDivElement;
       const parsedMemo = memoInput.innerText.replace(/\n\n/gm, "\n");
 
-      await supabase
+      await db
         .from("memos")
         .update({ content: parsedMemo, updated_at: new Date().toISOString() })
         .eq("id", memo.id);
@@ -28,6 +31,25 @@ export default function MemoInput({ memo }: { memo: Tables<"memos"> }) {
     },
     1000,
   );
+
+  const makenewMemo = async () => {
+    const { data: memo } = await db
+      .from("memos")
+      .insert({ selected: false, title: "unnamed", content: "" })
+      .select()
+      .limit(1)
+      .single();
+
+    if (!memo) {
+      throw new Error("Failed to create new memo");
+    }
+
+    router.push(`/memo/${memo.id}`);
+  };
+
+  const backToMemos = () => {
+    router.push(`/`);
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -49,17 +71,23 @@ export default function MemoInput({ memo }: { memo: Tables<"memos"> }) {
 
   return (
     <div className="grid">
-      <LogoutButton />
-      <div className="grid justify-end">
-        <div>created: {memoCreatedAt}</div>
-        <div>updated: {memoUpdatedAt}</div>
+      <div className="px-4 py-8">
+        <div className="grid grid-flow-col justify-start gap-x-4">
+          <Button onClick={backToMemos}>←</Button>
+          <NewMemo makenewMemo={makenewMemo} />
+          {/* <LogoutButton /> */}
+        </div>
+        <div className="grid justify-end">
+          <div>created: {memoCreatedAt}</div>
+          <div>updated: {memoUpdatedAt}</div>
+        </div>
       </div>
       <div
         contentEditable
         suppressContentEditableWarning
         onKeyUp={onKeyUpMemoInput}
         ref={editableRef}
-        className="inline-block outline-none break-all text-size text-white text-[1.8rem] md:text-[2rem] height-[calc(100% - 3rem)] px-7 py-8  md:px-24 md:py-20"
+        className="text-size height-[calc(100% - 3rem)] inline-block break-all p-8 text-[1.8rem] text-white outline-none md:px-24  md:py-20 md:text-[2rem]"
       >
         {memo && <div>{bakeTags(memo.content ?? "")}</div>}
       </div>
@@ -93,3 +121,7 @@ const bakeTags = (memo: string) => {
     );
   });
 };
+
+function NewMemo({ makenewMemo }: { makenewMemo: () => void }) {
+  return <Button onClick={makenewMemo}>New Memo</Button>;
+}

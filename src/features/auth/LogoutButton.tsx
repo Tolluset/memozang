@@ -2,11 +2,11 @@
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-import { Database } from "~/models/database.types";
+import { DB } from "~/models/database.types";
 import Button from "~/ds/Button";
 
 export default function LogoutButton() {
-  const supabase = createClientComponentClient<Database>();
+  const supabase = createClientComponentClient<DB>();
 
   const onClickLogoutButton = async () => {
     await supabase.auth.signOut();
