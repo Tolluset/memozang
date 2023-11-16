@@ -10,7 +10,6 @@ import { useRouter } from "next/navigation";
 
 export default function MemoInput({ memo }: { memo: Memo }) {
   const [mounted, setMounted] = useState(false);
-  const [updatedAt, setUpdatedAt] = useState(memo.updated_at);
 
   const editableRef = useRef<HTMLDivElement>(null);
 
@@ -26,8 +25,6 @@ export default function MemoInput({ memo }: { memo: Memo }) {
         .from("memos")
         .update({ content: parsedMemo, updated_at: new Date().toISOString() })
         .eq("id", memo.id);
-
-      setUpdatedAt(new Date().toLocaleString("en-US"));
     },
     1000,
   );
@@ -61,14 +58,6 @@ export default function MemoInput({ memo }: { memo: Memo }) {
     }
   }, [mounted]);
 
-  const memoCreatedAt = memo.created_at
-    ? new Date(memo?.created_at).toLocaleString("en-US")
-    : "unknown";
-
-  const memoUpdatedAt = updatedAt
-    ? new Date(updatedAt).toLocaleString("en-US")
-    : "unknown";
-
   return (
     <div className="grid">
       <div className="px-4 py-8">
@@ -76,10 +65,6 @@ export default function MemoInput({ memo }: { memo: Memo }) {
           <Button onClick={backToMemos}>←</Button>
           <NewMemo makenewMemo={makenewMemo} />
           {/* <LogoutButton /> */}
-        </div>
-        <div className="grid justify-end">
-          <div>created: {memoCreatedAt}</div>
-          <div>updated: {memoUpdatedAt}</div>
         </div>
       </div>
       <div
