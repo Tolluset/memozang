@@ -2,11 +2,11 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { DB, DBClient, Memo } from "~/models/database.types";
+import { DB, Memo } from "~/models/database.types";
 import { useDebounce } from "~/hooks/useDebounce";
-import LogoutButton from "../auth/LogoutButton";
 import Button from "~/ds/Button";
 import { useRouter } from "next/navigation";
+import { patchMemo } from "~/app/actions";
 
 export default function MemoInput({ memo }: { memo: Memo }) {
   const [mounted, setMounted] = useState(false);
@@ -29,21 +29,6 @@ export default function MemoInput({ memo }: { memo: Memo }) {
     1000,
   );
 
-  const makenewMemo = async () => {
-    const { data: memo } = await db
-      .from("memos")
-      .insert({ selected: false, title: "unnamed", content: "" })
-      .select()
-      .limit(1)
-      .single();
-
-    if (!memo) {
-      throw new Error("Failed to create new memo");
-    }
-
-    router.push(`/memo/${memo.id}`);
-  };
-
   const backToMemos = () => {
     router.push(`/`);
   };
@@ -60,12 +45,9 @@ export default function MemoInput({ memo }: { memo: Memo }) {
 
   return (
     <div className="grid">
-      <div className="px-4 py-8">
-        <div className="grid grid-flow-col justify-start gap-x-4">
-          <Button onClick={backToMemos}>←</Button>
-          <NewMemo makenewMemo={makenewMemo} />
-          {/* <LogoutButton /> */}
-        </div>
+      <div className="grid grid-flow-col px-4 py-8">
+        <Button onClick={backToMemos}>←</Button>
+        <MemoTitle memo={memo} />
       </div>
       <div
         contentEditable
@@ -107,6 +89,68 @@ const bakeTags = (memo: string) => {
   });
 };
 
-function NewMemo({ makenewMemo }: { makenewMemo: () => void }) {
-  return <Button onClick={makenewMemo}>New Memo</Button>;
+function MemoTitle({ memo }: { memo: Memo }) {
+  const [titleState, setTitleState] = useState(memo.title);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const updateTitle = (title: string) => {
+    setTitleState(title);
+  };
+
+  const startEditing = () => {
+    setIsEditing(true);
+  };
+
+  const finishEditing = () => {
+    setIsEditing(false);
+  };
+
+  return (
+    <div className="grid grid-flow-row justify-end">
+      <EditMemoTitle
+        memo={memo}
+        isEditing={isEditing}
+        startEditing={startEditing}
+        finishEditing={finishEditing}
+        updateTitle={updateTitle}
+      />
+      {!isEditing && (
+        <h1 className="justify-self-end text-2xl">{titleState}</h1>
+      )}
+    </div>
+  );
+}
+
+function EditMemoTitle({
+  memo,
+  isEditing,
+  startEditing,
+  finishEditing,
+  updateTitle,
+}: {
+  memo: Memo;
+
+  isEditing: boolean;
+  startEditing: () => void;
+  finishEditing: () => void;
+  updateTitle: (title: string) => void;
+}) {
+  const patchMemoWithId = patchMemo.bind(null, { id: memo.id });
+
+  return isEditing ? (
+    <form
+      action={async (formData) => {
+        const res = await patchMemoWithId(formData);
+
+        updateTitle(res.title);
+        finishEditing();
+      }}
+    >
+      <input type="text" name="title" className="text-black" />
+    </form>
+  ) : (
+    <Button onClick={startEditing} className="justify-self-end text-xl">
+      E
+    </Button>
+  );
 }
