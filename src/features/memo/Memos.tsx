@@ -48,7 +48,7 @@ function MemoPaper({ memo }: { memo: Memo }) {
   return (
     <a
       href={`memo/${memo.id}`}
-      className="h-40 w-40 justify-self-center bg-secondary text-black md:h-60 md:w-60"
+      className="min-h-[160px] justify-self-center rounded-md bg-secondary p-2 text-4xl text-black md:min-h-[240px] md:w-60"
     >
       {memo.title}
     </a>
