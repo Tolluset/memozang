@@ -122,7 +122,7 @@ function MemoTitle({ memo }: { memo: Memo }) {
             <input
               type="text"
               name="title"
-              value={titleState ?? ""}
+              placeholder={titleState ?? ""}
               className="text-3xl text-black"
             />
           </form>

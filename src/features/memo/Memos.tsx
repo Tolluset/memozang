@@ -35,7 +35,7 @@ export default function Memos({ memos }: { memos: Memo[] | null }) {
           <NewMemo makenewMemo={makenewMemo} />
         </div>
       </div>
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(170px,1fr))] gap-x-8 gap-y-16 px-4 py-12">
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(150px,2fr))] gap-x-8 gap-y-16 px-4 py-12 md:grid-cols-[repeat(auto-fill,minmax(170px,1fr))]">
         {memos
           ? memos.map((memo) => <MemoPaper key={memo.id} memo={memo} />)
           : "no memos"}
@@ -48,7 +48,7 @@ function MemoPaper({ memo }: { memo: Memo }) {
   return (
     <a
       href={`memo/${memo.id}`}
-      className="min-h-[160px] justify-self-center break-words rounded-md bg-secondary p-2 text-4xl text-black md:min-h-[240px] md:w-60"
+      className="line-clamp-6 h-64 min-h-[160px] w-64 justify-self-center break-words rounded-md bg-secondary p-3 text-4xl text-black "
     >
       {memo.title}
     </a>

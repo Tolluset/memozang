@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "dev": "concurrently -n NEXT,TS -c magenta,cyan 'next dev' 'pnpm ts:watch'",
-    "prd": "NODE_ENV=production concurrently -n NEXT,TS -c magenta,cyan 'next start' 'pnpm ts:watch'",
     "ts": "tsc --noEmit --incremental --preserveWatchOutput --pretty",
     "ts:watch": "pnpm ts --watch",
     "lint": "next lint",
