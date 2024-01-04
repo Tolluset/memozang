@@ -59,8 +59,9 @@ function Buttons() {
     <div className="grid w-full gap-8 pt-14">
       <Button className="w-full">Sign In</Button>
       <Button
+        variant="outlined"
         formAction="/auth/sign-up"
-        className="w-40 justify-self-center bg-transparent text-base"
+        className="w-full justify-self-center"
       >
         Sign Up
       </Button>
