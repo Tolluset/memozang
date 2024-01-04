@@ -35,7 +35,7 @@ export default function Memos({ memos }: { memos: Memo[] | null }) {
           <NewMemo makenewMemo={makenewMemo} />
         </div>
       </div>
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(150px,2fr))] gap-x-8 gap-y-16 px-4 py-12 md:grid-cols-[repeat(auto-fill,minmax(170px,1fr))]">
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-x-4 gap-y-16 px-4 py-12 md:grid-cols-[repeat(auto-fill,minmax(180px,1fr))] md:gap-x-12">
         {memos
           ? memos.map((memo) => <MemoPaper key={memo.id} memo={memo} />)
           : "no memos"}
@@ -48,7 +48,7 @@ function MemoPaper({ memo }: { memo: Memo }) {
   return (
     <a
       href={`memo/${memo.id}`}
-      className="line-clamp-6 h-64 min-h-[160px] w-64 justify-self-center break-words rounded-md bg-secondary p-3 text-4xl text-black "
+      className="h-64 w-64 justify-self-center overflow-hidden break-all rounded-md bg-secondary p-2 text-3xl text-black md:h-72 md:w-72 md:p-3 md:text-4xl"
     >
       {memo.title}
     </a>
@@ -56,5 +56,28 @@ function MemoPaper({ memo }: { memo: Memo }) {
 }
 
 function NewMemo({ makenewMemo }: { makenewMemo: () => void }) {
-  return <Button onClick={makenewMemo}>New Memo</Button>;
+  return (
+    <Button variant="transparent" onClick={makenewMemo}>
+      <PlusIcon />
+    </Button>
+  );
+}
+
+function PlusIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+      className="h-16 w-16 text-primary"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+      />
+    </svg>
+  );
 }
